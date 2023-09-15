@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -z $1 ]; then read -p "node ($ssFilter)?  " id; else id=$1; fi
-source ~/config./subspace.sh $id
+source ~/config/subspace.sh $id
 echo "starting node $id ($base $node $type $chain $base $port $wsport $name $peers)"
 cd $ssexec;
 case $type in
