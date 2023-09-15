@@ -24,7 +24,7 @@ if [ -z $1 ]
     id=$1
   fi
 
-source ~/config/subspace.sh $id
+source ~/scripts/subspace/config/node$id
 
 name="subspace"$id
 nlog=~/logs/subspace_node$id.log
