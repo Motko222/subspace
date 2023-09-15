@@ -24,6 +24,7 @@ if [ -z $1 ]
     id=$1
   fi
 
+source ~/scripts/subspace/config/env
 source ~/scripts/subspace/config/node$id
 
 name="subspace"$id
