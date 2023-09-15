@@ -1,7 +1,20 @@
 #!/bin/bash
 
-if [ -z $1 ]; then read -p "node ($ssFilter)?  " id; else id=$1; fi
-source ~/config/subspace.sh $id
-echo "starting farmer $id ($base $rpc $reward $size)"
+if [ -z $1 ]
+  then 
+    echo "Running nodes:"
+    ps aux | grep subspace-node | grep -v grep | awk 'match($0, /subspace[0-9]|subspace[0-9][0-9]/) {print substr($0, RSTART, RLENGTH)}'
+    echo "------------------------"
+    echo "Running farmers:"
+    ps aux | grep subspace-farmers | grep -v grep | awk 'match($0, /subspace[0-9]|subspace[0-9][0-9]/) {print substr($0, RSTART, RLENGTH)}'
+    echo "------------------------"
+    read -p "Farmer?  " id
+    echo "------------------------"
+  else 
+    id=$1
+fi
+
+source ~/scripts/subspace/config/node$id
+echo "Starting farmer $id ($base $rpc $reward $size)"
 cd $ssexec;
 ./$farmer farm --node-rpc-url $rpc --reward-address $reward path=$base,size=$size &>> ~/logs/subspace_farmer$id.log &
