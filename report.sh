@@ -64,9 +64,9 @@ if [ "$npid" = "-" ]; then status="error";note="node not running";peers="-"; fi
 #echo "status:            " $status
 #echo "last_block_time:   " $bdate
 #echo "last_block_age:    " $(min_conv $bmin)
-#echo "node_height:       " $currentblock
-#echo "network_height:    " $bestblock
-#echo "peers:             " $peers
+echo "node_height:       " $currentblock
+echo "network_height:    " $bestblock
+echo "peers:             " $peers
 #echo "last_reward_time:  " $rdate
 #echo "last_reward_age:   " $(min_conv $rmin)
 #echo "rewards_daily:     " $rew1 $rew2 $rew3 $rew4
