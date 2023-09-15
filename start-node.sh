@@ -1,7 +1,17 @@
 #!/bin/bash
 
-if [ -z $1 ]; then read -p "node ($ssFilter)?  " id; else id=$1; fi
-source ~/config/subspace.sh $id
+if [ -z $1 ]
+  then 
+    echo "Configured nodes:"
+    ls ~/scripts/subspace/config | grep node
+    echo "------------------------"
+    read -p "Node?  " id
+    echo "------------------------"
+  else 
+    id=$1
+  fi
+
+source ~/scripts/subspace/config/node$id
 echo "starting node $id ($base $node $type $chain $base $port $wsport $name $peers)"
 cd $ssexec;
 case $type in
