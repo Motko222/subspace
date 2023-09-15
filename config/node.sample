@@ -1,0 +1,9 @@
+name=mynode1
+base=/path/to/node/data
+type=full
+size=128G
+peers=25
+reward=xxx
+port=30333
+wsport=$(($port+10000))
+rpc="ws://127.0.0.1:"$wsport
