@@ -17,7 +17,7 @@ fpid=$(ps aux | grep -w $base | grep subspace-farmer-ubuntu | awk '{print $2}')
 if [ ! -z $fpid ]
   then 
     echo "Stopping farmer process "$fpid
-    kill -9 $fpid 
+    kill $fpid 
   else 
     echo "Farmer not running"
 fi
@@ -26,7 +26,7 @@ npid=$(ps aux | grep -w $base | grep subspace-node-ubuntu | awk '{print $2}')
 if [ ! -z $npid ]
   then 
     echo "Stopping node process "$npid
-    kill -9 $npid
+    kill $npid
     sleep 5s
   else 
     echo "Node not running"
