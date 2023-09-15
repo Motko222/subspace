@@ -6,7 +6,7 @@ if [ -z $1 ]
     ps aux | grep subspace-node | grep -v grep | awk 'match($0, /subspace[0-9]|subspace[0-9][0-9]/) {print substr($0, RSTART, RLENGTH)}'
     echo "------------------------"
     echo "Running farmers:"
-    ps aux | grep subspace-farmers | grep -v grep | awk 'match($0, /subspace[0-9]|subspace[0-9][0-9]/) {print substr($0, RSTART, RLENGTH)}'
+    ps aux | grep subspace-farmer | grep -v grep | awk 'match($0, /subspace[0-9]|subspace[0-9][0-9]/) {print substr($0, RSTART, RLENGTH)}'
     echo "------------------------"
     read -p "Farmer?  " id
     echo "------------------------"
