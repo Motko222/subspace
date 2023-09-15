@@ -68,7 +68,7 @@ balance=$(curl -s POST 'https://subspace.api.subscan.io/api/scan/account/tokens'
 if [ -z $balance ]; then balance="0"; fi
 
 if [ $diffblock -le 5 ]; then status="ok";note="reward "$(min_conv $rmin)" ago, balance "$balance; else status="warning";note="syncing $currentblock/$bestblock"; fi
-if [ $bestblock -eq 0];  then status="error";note="cannot fetch network height"; fi
+if [ $bestblock -eq 0 ];  then status="error";note="cannot fetch network height"; fi
 if [ "$fpid" = "-" ];    then status="warning";note="farmer not running, sync status $currentblock/$bestblock";peers=$peers; fi
 if [ "$npid" = "-" ];    then status="error";note="node not running";peers="-"; fi
 
