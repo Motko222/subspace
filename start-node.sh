@@ -12,7 +12,7 @@ if [ -z $1 ]
   fi
 
 source ~/scripts/subspace/config/node$id
-echo "starting node $id ($base $node $type $chain $base $port $wsport $name $peers)"
+echo "Starting node $id ($base $node $type $chain $base $port $wsport $name $peers)"
 cd $ssexec;
 case $type in
   arch) ./$node --chain $chain --base-path $base --execution wasm --state-pruning archive --validator --port $port --rpc-port $wsport \
