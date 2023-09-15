@@ -1,5 +1,5 @@
 name=mynode1
-base=/path/to/node/data
+base=/root/subspace1
 type=full
 size=128G
 peers=25
