@@ -33,8 +33,6 @@ if [ ! -z $npid ]
 fi
 
 cd ~/scripts/subspace
-echo "Starting node"
 ./start-node.sh $id
 sleep 10s
-echo "starting farmer"
 ./start-farmer.sh $id
