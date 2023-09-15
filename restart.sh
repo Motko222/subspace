@@ -11,29 +11,29 @@ if [ -z $1 ]
     id=$1
   fi
 
-source ~/config/subspace.sh $id
+source ~/scripts/subspace/config/node$id
 
 fpid=$(ps aux | grep -w $base | grep subspace-farmer-ubuntu | awk '{print $2}')
 if [ ! -z $fpid ]
   then 
-    echo "killing farmer "$fpid
+    echo "Stopping farmer process "$fpid
     kill -9 $fpid 
   else 
-    echo "farmer not running"
+    echo "Farmer not running"
 fi
 
 npid=$(ps aux | grep -w $base | grep subspace-node-ubuntu | awk '{print $2}')
 if [ ! -z $npid ]
   then 
-    echo "killing node "$npid
+    echo "Stopping node process "$npid
     kill -9 $npid
     sleep 5s
   else 
-    echo "node not running"
+    echo "Node not running"
 fi
 
 cd ~/scripts/subspace
-echo "starting node"
+echo "Starting node"
 ./start-node.sh $id
 sleep 10s
 echo "starting farmer"
