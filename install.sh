@@ -2,9 +2,18 @@
 
 source ~/scripts/subspace/config/env
 
+if [ ! -d $ssexec ] 
+  then
+    mkdir $ssexec
+fi
+
 read -p "Sure? " c
 case $c in
   y)
+    if [ ! -d $ssexec ] 
+      then
+        mkdir $ssexec
+    fi
     cd $ssexec
     rm subspace-node* subspace-farmer*
     echo "Get links from here: https://docs.subspace.network/docs/protocol/substrate-cli"
