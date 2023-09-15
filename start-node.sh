@@ -11,6 +11,7 @@ if [ -z $1 ]
     id=$1
   fi
 
+source ~/scripts/subspace/config/env
 source ~/scripts/subspace/config/node$id
 echo "Starting node $id ($base $node $type $chain $base $port $wsport $name $peers)"
 cd $ssexec;
