@@ -1,5 +1,18 @@
 #!/bin/bash
 
+min_conv () {
+ a=$1
+ case $a in
+  "")  out=" " ;;
+  "never") out="never" ;;
+  0) out="now" ;;
+  [1-9]|[1-9][0-9]|1[0-1][0-9]) out=$a"m" ;; #1-119
+  1[2-9][0-9]|[2-9][0-9][0-9]|1[0-9][0-9][0-9]|2[0-7][0-9][0-9]|28[0-7][0-9]) out=$((a/60))"h"  ;; #120-2879
+  *) out=$((a/60/24))"d" ;;
+  esac
+ echo $out
+}
+
 if [ -z $id ]; then read -p "node ($ssFilter)?  " id; fi
 source ~/config/subspace.sh $id
 
@@ -56,6 +69,7 @@ if [ -z $balance ]; then balance="0"; fi
 
 note="reward "$(min_conv $rmin)" ago, balance "$balance
 if [ $diffblock -le 5 ]; then status="ok";note="reward "$(min_conv $rmin)" ago, balance "$balance; else status="warning";note="syncing "$currentblock"/"$bestblock; fi
+if [ $bestblock -eq 0]; then status="error";note="cannot fetch network height"
 if [ "$fpid" = "-" ]; then status="warning";note="farmer not running, sync status $currentblock/$bestblock";peers=$peers; fi
 if [ "$npid" = "-" ]; then status="error";note="node not running";peers="-"; fi
 
@@ -64,9 +78,9 @@ if [ "$npid" = "-" ]; then status="error";note="node not running";peers="-"; fi
 #echo "status:            " $status
 #echo "last_block_time:   " $bdate
 #echo "last_block_age:    " $(min_conv $bmin)
-echo "node_height:       " $currentblock
-echo "network_height:    " $bestblock
-echo "peers:             " $peers
+#echo "node_height:       " $currentblock
+#echo "network_height:    " $bestblock
+#echo "peers:             " $peers
 #echo "last_reward_time:  " $rdate
 #echo "last_reward_age:   " $(min_conv $rmin)
 #echo "rewards_daily:     " $rew1 $rew2 $rew3 $rew4
