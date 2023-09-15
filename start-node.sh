@@ -13,6 +13,12 @@ if [ -z $1 ]
 
 source ~/scripts/subspace/config/env
 source ~/scripts/subspace/config/node$id
+
+if [ ! -d $base ] 
+  then
+    mkdir $base
+fi
+
 echo "Starting node $id ($base $node $type $chain $base $port $wsport $name $peers)"
 cd $ssexec;
 case $type in
