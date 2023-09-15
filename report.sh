@@ -61,7 +61,7 @@ rew4=$(cat $flog | grep 'Successfully signed reward hash' | grep -c $(date -d "3
 size=$(ps aux | grep -w $base | grep subspace-farmer-ubuntu | awk -F 'size=' '{print $2}'| awk '{print $1}')
 folder=$(du -hs $base | awk '{print $1}')
 archive=$(ps aux | grep -w $base | grep subspace-node-ubuntu | grep -c archive)
-if [ archive == 1 ]; then type="archive $size"; else type="full $size"; fi
+if [ archive == 1 ]; then type="$size (archive)"; else type="$size"; fi
 version=$(cat $nlog | grep version | awk '{print $5}' | head -1 | cut -d "-" -f 1 )
 balance=$(curl -s POST 'https://subspace.api.subscan.io/api/scan/account/tokens' --header 'Content-Type: application/json' \
  --header 'X-API-Key: '$apiKey'' --data-raw '{ "address": "'$reward'" }' | jq -r '.data.native' | jq -r '.[].balance' | awk '{print $1/1000000000000000000}')
@@ -69,7 +69,7 @@ if [ -z $balance ]; then balance="0"; fi
 
 note="reward "$(min_conv $rmin)" ago, balance "$balance
 if [ $diffblock -le 5 ]; then status="ok";note="reward "$(min_conv $rmin)" ago, balance "$balance; else status="warning";note="syncing "$currentblock"/"$bestblock; fi
-if [ $bestblock -eq 0]; then status="error";note="cannot fetch network height"
+if [ $bestblock -eq 0]; then status="error";note="cannot fetch network height"; fi
 if [ "$fpid" = "-" ]; then status="warning";note="farmer not running, sync status $currentblock/$bestblock";peers=$peers; fi
 if [ "$npid" = "-" ]; then status="error";note="node not running";peers="-"; fi
 
