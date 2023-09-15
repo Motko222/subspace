@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ~/scripts/subspace/config/env
+
 read -p "Sure? " c
 case $c in
   y)
