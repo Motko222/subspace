@@ -73,7 +73,8 @@ size=$(ps aux | grep -w $base | grep subspace-farmer-ubuntu | awk -F 'size=' '{p
 folder=$(du -hs $base | awk '{print $1}')
 archive=$(ps aux | grep -w $base | grep subspace-node-ubuntu | grep -c archive)
 if [ archive == 1 ]; then type="$size (archive)"; else type="$size"; fi
-version=$(cat $nlog | grep version | awk '{print $5}' | head -1 | cut -d "-" -f 1 )
+#version=$(cat $nlog | grep version | awk '{print $5}' | head -1 | cut -d "-" -f 1 )
+version=$(ps aux | grep subspace-node-ubuntu | grep $base | awk -F "2023-" '{print $2}' | awk '{print $1}')
 balance=$(curl -s POST 'https://subspace.api.subscan.io/api/scan/account/tokens' --header 'Content-Type: application/json' \
  --header 'X-API-Key: '$apiKey'' --data-raw '{ "address": "'$reward'" }' | jq -r '.data.native' | jq -r '.[].balance' | awk '{print $1/1000000000000000000}')
 if [ -z $balance ]; then balance="0"; fi
