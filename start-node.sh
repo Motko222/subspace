@@ -3,7 +3,7 @@
 if [ -z $1 ]
   then 
     echo "Configured nodes:"
-    ls ~/scripts/subspace/config | grep node | grep -v sample
+    ls ~/scripts/subspace/config | grep node | grep -v sample | sed 's/node//g'
     echo "------------------------"
     read -p "Node?  " id
     echo "------------------------"
