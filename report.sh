@@ -72,7 +72,7 @@ rew4=$(cat $flog | grep 'Successfully signed reward hash' | grep -c $(date -d "3
 size=$(ps aux | grep -w $base | grep subspace-farmer-ubuntu | awk -F 'size=' '{print $2}'| awk '{print $1}')
 folder=$(du -hs $base | awk '{print $1}')
 archive=$(ps aux | grep -w $base | grep subspace-node-ubuntu | grep -c archive)
-if [ archive == 1 ]; then type="$size (archive)"; else type="$size"; fi
+type="$size ($type)"
 #version=$(cat $nlog | grep version | awk '{print $5}' | head -1 | cut -d "-" -f 1 )
 version=$(ps aux | grep subspace-node-ubuntu | grep $base | awk -F "2023-" '{print $2}' | awk '{print $1}')
 balance=$(curl -s POST 'https://subspace.api.subscan.io/api/scan/account/tokens' --header 'Content-Type: application/json' \
