@@ -26,4 +26,6 @@ case $type in
      --in-peers $peers --in-peers-light $peers --out-peers $peers --name $name &> ~/logs/subspace_node$id.log & ;;
   full) ./$node --chain $chain --base-path $base --execution wasm --state-pruning 1024 --keep-blocks 1024 --validator --port $port --rpc-port $wsport \
      --in-peers $peers --in-peers-light $peers --out-peers $peers --name $name &> ~/logs/subspace_node$id.log & ;;
+  arch256) ./$node --chain $chain --base-path $base --execution wasm --blocks-pruning 256 --state-pruning archive --validator --port $port --rpc-port $wsport \
+     --in-peers $peers --in-peers-light $peers --out-peers $peers --name $name &> ~/logs/subspace_node$id.log & ;;
 esac
