@@ -44,7 +44,7 @@ if [ -z $currentblock ]; then currentblock=0; fi
 bestblock=$(curl -s -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "system_syncState", "params":[]}' http://localhost:$wsport | jq -r ".result.highestBlock")
 if [ -z $bestblock ]; then bestblock=0; fi
 diffblock=$(($bestblock-$currentblock))
-plotted=$(tail ~/logs/subspace_farmer9.log | grep "Sector plotted successfully" | tail -1 | awk -F "Sector plotted successfully " '{print $2}' | awk '{print $1}' | sed 's/(\|)//g')
+plotted=$(tail ~/logs/subspace_farmer$id.log | grep "Sector plotted successfully" | tail -1 | awk -F "Sector plotted successfully " '{print $2}' | awk '{print $1}' | sed 's/(\|)//g')
 
 bmin=$((($(date +%s)-$(date -d $bdate +%s))/60))
 
