@@ -57,12 +57,7 @@ else
  rmin=$((($(date +%s)-$(date -d $rdate +%s))/60))
 fi
 
-case $state in
- Idle) peers=$(echo $temp1 | awk '{print $6}' | sed 's/(//') ;;
- Syncing) peers=$(echo $temp1 | awk '{print $9}' | sed 's/(//');;
- Preparing) peers=$(echo $temp1 | awk '{print $8}' | sed 's/(//');;
- *) peers="-"
-esac
+peers=$(grep --line-buffered --text -E "Idle|Syncing|Preparing" $nlog | tail -1 | awk -F " peers" '{print $1}' | awk -F " \(" '{print $2}')
 
 rew1=$(cat $flog | grep 'Successfully signed reward hash' | grep -c $(date -d "today" '+%Y-%m-%d'))
 rew2=$(cat $flog | grep 'Successfully signed reward hash' | grep -c $(date -d "yesterday" '+%Y-%m-%d'))
