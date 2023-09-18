@@ -45,6 +45,7 @@ if [ -z $currentblock ]; then currentblock=0; fi
 bestblock=$(curl -s -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "system_syncState", "params":[]}' http://localhost:$wsport | jq -r ".result.highestBlock")
 if [ -z $bestblock ]; then bestblock=0; fi
 diffblock=$(($bestblock-$currentblock))
+plotted=$(tail ~/logs/subspace_farmer9.log | grep "Sector plotted successfully" | tail -1 | awk -F "Sector plotted successfully " '{print $2}' | awk '{print $1}' | sed 's/(\|)//g')
 
 bmin=$((($(date +%s)-$(date -d $bdate +%s))/60))
 
@@ -79,7 +80,7 @@ balance=$(curl -s POST 'https://subspace.api.subscan.io/api/scan/account/tokens'
  --header 'X-API-Key: '$apiKey'' --data-raw '{ "address": "'$reward'" }' | jq -r '.data.native' | jq -r '.[].balance' | awk '{print $1/1000000000000000000}')
 if [ -z $balance ]; then balance="0"; fi
 
-if [ $diffblock -le 5 ]; then status="ok";note="rewards $rew1-$rew2-$rew3-$rew4, balance $balance"; else status="warning";note="syncing $currentblock/$bestblock, peers=$peers"; fi
+if [ $diffblock -le 5 ]; then status="ok";note="rewards $rew1-$rew2-$rew3-$rew4, balance $balance, plotted $plotted"; else status="warning";note="syncing $currentblock/$bestblock, peers=$peers"; fi
 if [ $bestblock -eq 0 ];  then status="error";note="cannot fetch network height"; fi
 if [ "$fpid" = "-" ];    then status="warning";note="farmer not running, sync status $currentblock/$bestblock";peers=$peers; fi
 if [ "$npid" = "-" ];    then status="error";note="node not running";peers="-"; fi
