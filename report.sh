@@ -32,21 +32,21 @@ nlog=~/logs/subspace_node$id.log
 flog=~/logs/subspace_farmer$id.log
 
 fpid=$(ps aux | grep -w $base | grep subspace-farmer-ubuntu | awk '{print $2}')
-if [ -z $fpid ]; then fpid="-"; fi
 npid=$(ps aux | grep -w $base | grep subspace-node-ubuntu | awk '{print $2}')
-if [ -z $npid ]; then npid="-"; fi
 #chain=$(cat $nlog | grep "Chain specification" | tail -1 | awk -F 'Subspace ' '{print $2}')
-temp1=$(grep --line-buffered --text -E "Idle|Syncing|Preparing" $nlog | tail -1)
-bdate=$(echo $temp1 | awk '{print $1}')T$(echo $temp1 | awk '{print $2}').000+0200
+
 currentblock=$(curl -s -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "system_syncState", "params":[]}' http://localhost:$wsport | jq -r ".result.currentBlock")
 if [ -z $currentblock ]; then currentblock=0; fi
 #bestblock=$(curl -s -H  POST 'https://subspace.api.subscan.io/api/scan/metadata' --header 'Content-Type: application/json' --header 'X-API-Key: $apiKey' | jq -r .data.blockNum )
 bestblock=$(curl -s -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "system_syncState", "params":[]}' http://localhost:$wsport | jq -r ".result.highestBlock")
 if [ -z $bestblock ]; then bestblock=0; fi
 diffblock=$(($bestblock-$currentblock))
-plotted=$(tail ~/logs/subspace_farmer$id.log | grep "Sector plotted successfully" | tail -1 | awk -F "Sector plotted successfully " '{print $2}' | awk '{print $1}' | sed 's/(\|)//g')
+plotted=$(tail $flog | grep "Sector plotted successfully" | tail -1 | awk -F "Sector plotted successfully " '{print $2}' | awk '{print $1}' | sed 's/(\|)//g')
 
+temp1=$(grep --line-buffered --text -E "Idle|Syncing|Preparing" $nlog | tail -1)
+bdate=$(echo $temp1 | awk '{print $1}')T$(echo $temp1 | awk '{print $2}').000+0200
 bmin=$((($(date +%s)-$(date -d $bdate +%s))/60))
+peers=$(echo $temp1 | awk -F " peers" '{print $1}' | awk -F " \(" '{print $2}')
 
 temp2=$(grep --line-buffered --text "Successfully signed reward hash" $flog | tail -1 | sed -r 's/\x1B\[(;?[0-9]{1,3})+[mGK]//g' )
 if [ -z $temp2 ]
@@ -56,8 +56,6 @@ else
  rdate=$(echo $temp2 | awk '{print $1}');
  rmin=$((($(date +%s)-$(date -d $rdate +%s))/60))
 fi
-
-peers=$(grep --line-buffered --text -E "Idle|Syncing|Preparing" $nlog | tail -1 | awk -F " peers" '{print $1}' | awk -F " \(" '{print $2}')
 
 rew1=$(cat $flog | grep 'Successfully signed reward hash' | grep -c $(date -d "today" '+%Y-%m-%d'))
 rew2=$(cat $flog | grep 'Successfully signed reward hash' | grep -c $(date -d "yesterday" '+%Y-%m-%d'))
@@ -92,16 +90,16 @@ if [ $bestblock -eq 0 ]
     note="cannot fetch network height"
 fi
 
-if [ "$fpid" = "-" ]
+if [ -z $fpid ]
   then 
     status="warning"
     note="farmer not running, sync $currentblock/$bestblock, peers $peers"
 fi
 
-if [ "$npid" = "-" ]
-  then status="error"
-  note="node not running"
-  peers="-"
+if [ -z $npid ]
+  then 
+    status="error"
+    note="node not running"
 fi
 
 #echo "updated:           " $(date +'%y-%m-%d %H:%M')
