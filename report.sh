@@ -37,7 +37,6 @@ npid=$(ps aux | grep -w $base | grep subspace-node-ubuntu | awk '{print $2}')
 if [ -z $npid ]; then npid="-"; fi
 #chain=$(cat $nlog | grep "Chain specification" | tail -1 | awk -F 'Subspace ' '{print $2}')
 temp1=$(grep --line-buffered --text -E "Idle|Syncing|Preparing" $nlog | tail -1)
-if [ "$npid" = "-" ]; then status="error";note="not running"; else state=$(echo $temp1 | awk '{print $5}'); fi
 bdate=$(echo $temp1 | awk '{print $1}')T$(echo $temp1 | awk '{print $2}').000+0200
 currentblock=$(curl -s -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "system_syncState", "params":[]}' http://localhost:$wsport | jq -r ".result.currentBlock")
 if [ -z $currentblock ]; then currentblock=0; fi
@@ -78,12 +77,37 @@ type="$size ($type)"
 version=$(ps aux | grep subspace-node-ubuntu | grep $base | awk -F "2023-" '{print $2}' | awk '{print $1}')
 balance=$(curl -s POST 'https://subspace.api.subscan.io/api/scan/account/tokens' --header 'Content-Type: application/json' \
  --header 'X-API-Key: '$apiKey'' --data-raw '{ "address": "'$reward'" }' | jq -r '.data.native' | jq -r '.[].balance' | awk '{print $1/1000000000000000000}')
-if [ -z $balance ]; then balance="0"; fi
 
-if [ $diffblock -le 5 ]; then status="ok";note="rewards $rew1-$rew2-$rew3-$rew4, balance $balance, plotted $plotted"; else status="warning";note="syncing $currentblock/$bestblock, peers=$peers"; fi
-if [ $bestblock -eq 0 ];  then status="error";note="cannot fetch network height"; fi
-if [ "$fpid" = "-" ];    then status="warning";note="farmer not running, sync status $currentblock/$bestblock";peers=$peers; fi
-if [ "$npid" = "-" ];    then status="error";note="node not running";peers="-"; fi
+if [ -z $balance ]
+  then balance="0"
+fi
+
+if [ $diffblock -le 5 ]
+  then 
+    status="ok"
+    note="rewards $rew1-$rew2-$rew3-$rew4, balance $balance, plotted $plotted, peers $peers"
+  else 
+    status="warning"
+    note="sync $currentblock/$bestblock, peers=$peers"; 
+fi
+
+if [ $bestblock -eq 0 ]
+  then 
+    status="warning"
+    note="cannot fetch network height"
+fi
+
+if [ "$fpid" = "-" ]
+  then 
+    status="warning"
+    note="farmer not running, sync $currentblock/$bestblock, peers $peers"
+fi
+
+if [ "$npid" = "-" ]
+  then status="error"
+  note="node not running"
+  peers="-"
+fi
 
 #echo "updated:           " $(date +'%y-%m-%d %H:%M')
 #echo "network:           " $chain
@@ -109,9 +133,9 @@ if [ "$npid" = "-" ];    then status="error";note="node not running";peers="-"; 
 #echo "note:              " $note
 
 echo "updated='$(date +'%y-%m-%d %H:%M')'"
-echo "version='"$version"'"
-echo "status="$status
-echo "note='"$note"'"
-echo "network='"$chain"'"
-echo "type='"$type"'"
-echo "folder="$folder
+echo "version='$version'"
+echo "status=$status"
+echo "note='$note'"
+echo "network='$chain'"
+echo "type='$type'"
+echo "folder=$folder"
