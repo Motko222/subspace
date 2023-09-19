@@ -94,7 +94,7 @@ fi
 if [ -z $fpid ]
   then 
     status="warning"
-    note="farmer not running, sync $currentblock/$bestblock, peers $peers"
+    note="farmer not running, sync $currentblock/$bestblock, peers $peers, $syncSpeed"
 fi
 
 if [ -z $npid ]
