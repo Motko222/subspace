@@ -8,7 +8,7 @@ if [ -z $1 ]
     read -p "Farmer?  " id
     echo "------------------------"
   else 
-    id=$1
+    id=$1 
   fi
 
 tail -f ~/logs/subspace_farmer$id.log
