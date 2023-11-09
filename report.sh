@@ -45,18 +45,18 @@ plotted=$(tail $flog | grep "Plotting sector " | tail -1 | awk -F "Plotting sect
 
 temp1=$(grep --line-buffered --text -E "Idle|Syncing|Preparing" $nlog | tail -1)
 bdate=$(echo $temp1 | awk '{print $1}')T$(echo $temp1 | awk '{print $2}').000+0200
-bmin=$((($(date +%s)-$(date -d $bdate +%s))/60))
+#bmin=$((($(date +%s)-$(date -d $bdate +%s))/60))
 peers=$(echo $temp1 | awk -F " peers" '{print $1}' | awk -F " \(" '{print $2}')
 syncSpeed=$(grep --line-buffered --text "Syncing" $nlog | tail -1 | awk -F "Syncing" '{print $2}' | awk -F "," '{print $1}')
 
-temp2=$(grep --line-buffered --text "Successfully signed reward hash" $flog | tail -1 | sed -r 's/\x1B\[(;?[0-9]{1,3})+[mGK]//g' )
-if [ -z $temp2 ]
-then
- rmin="never";
-else
- rdate=$(echo $temp2 | awk '{print $1}');
- rmin=$((($(date +%s)-$(date -d $rdate +%s))/60))
-fi
+#temp2=$(grep --line-buffered --text "Successfully signed reward hash" $flog | tail -1 | sed -r 's/\x1B\[(;?[0-9]{1,3})+[mGK]//g' )
+#if [ -z $temp2 ]
+#then
+# rmin="never";
+#else
+# rdate=$(echo $temp2 | awk '{print $1}');
+# rmin=$((($(date +%s)-$(date -d $rdate +%s))/60))
+#fi
 
 rew1=$(cat $flog | grep -a 'Successfully signed reward hash' | grep -c $(date -d "today" '+%Y-%m-%d'))
 rew2=$(cat $flog | grep -a 'Successfully signed reward hash' | grep -c $(date -d "yesterday" '+%Y-%m-%d'))
