@@ -58,10 +58,10 @@ else
  rmin=$((($(date +%s)-$(date -d $rdate +%s))/60))
 fi
 
-rew1=$(cat $flog | grep 'Successfully signed reward hash' | grep -c $(date -d "today" '+%Y-%m-%d'))
-rew2=$(cat $flog | grep 'Successfully signed reward hash' | grep -c $(date -d "yesterday" '+%Y-%m-%d'))
-rew3=$(cat $flog | grep 'Successfully signed reward hash' | grep -c $(date -d "2 days ago" '+%Y-%m-%d'))
-rew4=$(cat $flog | grep 'Successfully signed reward hash' | grep -c $(date -d "3 days ago" '+%Y-%m-%d'))
+rew1=$(cat $flog | grep -a 'Successfully signed reward hash' | grep -c $(date -d "today" '+%Y-%m-%d'))
+rew2=$(cat $flog | grep -a 'Successfully signed reward hash' | grep -c $(date -d "yesterday" '+%Y-%m-%d'))
+rew3=$(cat $flog | grep -a 'Successfully signed reward hash' | grep -c $(date -d "2 days ago" '+%Y-%m-%d'))
+rew4=$(cat $flog | grep -a 'Successfully signed reward hash' | grep -c $(date -d "3 days ago" '+%Y-%m-%d'))
 #address=${address1:0:4}...${address1: -4}
 size=$(ps aux | grep -w $base | grep subspace-farmer-ubuntu | awk -F 'size=' '{print $2}'| awk '{print $1}')
 folder=$(du -hs $base | awk '{print $1}')
