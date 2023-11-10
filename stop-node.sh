@@ -11,6 +11,6 @@ if [ -z $1 ]
     id=$1
 fi
 
-process=$(ps aux | grep subspace-node | grep -v grep | grep "subspace$id " | awk '{print $2}')
+process=$(ps aux | grep subspace-node | grep -v grep | grep "subspace$id" | awk '{print $2}')
 echo "Killing process $process..."
 kill $process
