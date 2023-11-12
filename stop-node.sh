@@ -8,7 +8,7 @@ if [ -z $1 ]
     read -p "Node?  " id
     echo "------------------------"
   else 
-    id=$1
+    id=$1 
 fi
 
 process=$(ps aux | grep subspace-node | grep -v grep | grep "subspace$id" | awk '{print $2}')
