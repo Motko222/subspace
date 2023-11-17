@@ -41,7 +41,7 @@ if [ -z $currentblock ]; then currentblock=0; fi
 bestblock=$(curl -s -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "system_syncState", "params":[]}' http://localhost:$wsport | jq -r ".result.highestBlock")
 if [ -z $bestblock ]; then bestblock=0; fi
 diffblock=$(($bestblock-$currentblock))
-plotted=$(tail $flog | grep "Plotting sector " | tail -1 | awk -F "Plotting sector " '{print $2}' | awk '{print $1}' | sed 's/(\|)//g')
+plotted=$(cat $flog | grep --line-buffered --text "Plotting sector " | tail -1 | awk -F "Plotting sector " '{print $2}' | awk '{print $1}' | sed 's/(\|)//g')
 
 temp1=$(grep --line-buffered --text -E "Idle|Syncing|Preparing" $nlog | tail -1)
 bdate=$(echo $temp1 | awk '{print $1}')T$(echo $temp1 | awk '{print $2}').000+0200
