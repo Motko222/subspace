@@ -19,3 +19,5 @@ source ~/scripts/subspace/config/node$id
 echo "Starting farmer $id ($base $rpc $reward $size)"
 cd $ssexec;
 ./$farmer farm --node-rpc-url $rpc --reward-address $reward path=$base,size=$size &>> ~/logs/subspace_farmer$id.log &
+sleep 1s
+tail -f ~/logs/subspace_farmer$id
