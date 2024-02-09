@@ -11,4 +11,4 @@ if [ -z $1 ]
     id=$1 
   fi
 
-tail -f ~/logs/subspace_farmer$id.log
+tail -f ~/logs/subspace_farmer$id
