@@ -20,12 +20,9 @@ if [ ! -d $base ]
 fi
 
 echo "Starting node $id ($base $node $type $chain $base $port $wsport $name $peers)"
-cd $ssexec;
-case $type in
-  arch) ./$node --chain $chain --base-path $base --execution wasm --state-pruning archive --validator --port $port --rpc-port $wsport \
-     --in-peers $peers --in-peers-light $peers --out-peers $peers --name $name &> ~/logs/subspace_node$id.log & ;;
-  full) ./$node --chain $chain --base-path $base --execution wasm --state-pruning 1024 --keep-blocks 1024 --validator --port $port --rpc-port $wsport \
-     --in-peers $peers --in-peers-light $peers --out-peers $peers --name $name &> ~/logs/subspace_node$id.log & ;;
-  arch256) ./$node --chain $chain --base-path $base --execution wasm --blocks-pruning 256 --state-pruning archive --validator --port $port --rpc-port $wsport \
-     --in-peers $peers --in-peers-light $peers --out-peers $peers --name $name &> ~/logs/subspace_node$id.log & ;;
-esac
+cd $ssexec
+
+ ./$node run --chain $chain --base-path $base --farmer --port $port --rpc-port $wsport \
+     --in-peers $peers --in-peers-light $peers --out-peers $peers --name $name &> ~/logs/subspace_node$id &     
+sleep 1s
+tail -f ~/logs/subspace_node$id
