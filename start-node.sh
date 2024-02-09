@@ -22,7 +22,8 @@ fi
 echo "Starting node $id ($base $node $type $chain $base $port $wsport $name $peers)"
 cd $ssexec
 
- ./$node run --chain $chain --base-path $base --farmer -- --port $port --rpc-port $wsport \
-     --in-peers $peers --in-peers-light $peers --out-peers $peers --name $name &> ~/logs/subspace_node$id &     
+ ./$node run --chain $chain --base-path $base --farmer --listen-on /ip4/0.0.0.0/tcp/$port --rpc-listen-on 127.0.0.1:$wsport \
+     --in-peers $peers --out-peers $peers --name $name &> ~/logs/subspace_node$id &  
+
 sleep 1s
 tail -f ~/logs/subspace_node$id
