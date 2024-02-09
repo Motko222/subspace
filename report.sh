@@ -28,8 +28,8 @@ source ~/scripts/subspace/config/env
 source ~/scripts/subspace/config/node$id
 
 name="subspace"$id
-nlog=~/logs/subspace_node$id.log
-flog=~/logs/subspace_farmer$id.log
+nlog=~/logs/subspace_node$id
+flog=~/logs/subspace_farmer$id
 
 fpid=$(ps aux | grep -w $base | grep subspace-farmer-ubuntu | awk '{print $2}')
 npid=$(ps aux | grep -w $base | grep subspace-node-ubuntu | awk '{print $2}')
