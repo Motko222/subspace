@@ -26,7 +26,7 @@ if [ -z $1 ]
 
 source ~/scripts/subspace/config/env
 source ~/scripts/subspace/config/node$id
-source ~/bash_profile
+source ~/.bash_profile
 
 bucket=node
 nlog=~/logs/subspace_node$id
