@@ -27,7 +27,8 @@ if [ -z $1 ]
 source ~/scripts/subspace/config/env
 source ~/scripts/subspace/config/node$id
 
-id="subspace"-$id
+name="subspace"$id
+id="subspace-"$id
 bucket=node
 nlog=~/logs/subspace_node$id
 flog=~/logs/subspace_farmer$id
