@@ -78,10 +78,16 @@ fi
 if [ $diffblock -le 5 ]
   then 
     status="ok"
-    message="size $size rewards $rew1-$rew2-$rew3-$rew4, balance $balance, plotted $plotted, peers $peers"
+    message="siz $size, rew $rew1-$rew2-$rew3-$rew4, bal $balance, prs $peers"
   else 
     status="warning"
-    message="sync $currentblock/$bestblock, peers=$peers, $syncSpeed"; 
+    message="sync $currentblock/$bestblock, prs $peers, $syncSpeed"; 
+fi
+
+if [ $(echo $plotted | cut -d . -f 1) -lt 99 ]
+  then 
+    status="warning"
+    message="size $size plotting $plotted, peers $peers"
 fi
 
 if [ $bestblock -eq 0 ]
