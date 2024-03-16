@@ -27,7 +27,6 @@ if [ -z $1 ]
 source ~/scripts/subspace/config/env
 source ~/scripts/subspace/config/node$id
 
-name="subspace"$id
 id="subspace-"$id
 bucket=node
 nlog=~/logs/subspace_node$id
@@ -127,12 +126,7 @@ fi
 #echo "type:              " $type
 #echo "message:              " $message
 
-echo "version='$version'"
-echo "status=$status"
-echo "message='$message'"
-echo "network='$chain'"
-echo "type='$type'"
-echo "folder=$folder"
+id="subspace-"$id
 
 cat << EOF
 {
