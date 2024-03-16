@@ -27,7 +27,8 @@ if [ -z $1 ]
 source ~/scripts/subspace/config/env
 source ~/scripts/subspace/config/node$id
 
-name="subspace"$id
+id="subspace"-$id
+bucket=node
 nlog=~/logs/subspace_node$id
 flog=~/logs/subspace_farmer$id
 
@@ -66,7 +67,6 @@ rew4=$(cat $flog | grep -a 'Successfully signed reward hash' | grep -c $(date -d
 size=$(ps aux | grep -w $base | grep subspace-farmer-ubuntu | awk -F 'size=' '{print $2}'| awk '{print $1}')
 folder=$(du -hs $base | awk '{print $1}')
 archive=$(ps aux | grep -w $base | grep subspace-node-ubuntu | grep -c archive)
-type="$size"
 #version=$(cat $nlog | grep version | awk '{print $5}' | head -1 | cut -d "-" -f 1 )
 version=$(ps aux | grep subspace-node-ubuntu | grep $base | awk -F "2024-" '{print $2}' | awk '{print $1}')
 balance=$(curl -s POST 'https://subspace.api.subscan.io/api/scan/account/tokens' --header 'Content-Type: application/json' \
@@ -79,28 +79,28 @@ fi
 if [ $diffblock -le 5 ]
   then 
     status="ok"
-    note="rewards $rew1-$rew2-$rew3-$rew4, balance $balance, plotted $plotted, peers $peers"
+    message="size $size rewards $rew1-$rew2-$rew3-$rew4, balance $balance, plotted $plotted, peers $peers"
   else 
     status="warning"
-    note="sync $currentblock/$bestblock, peers=$peers, $syncSpeed"; 
+    message="sync $currentblock/$bestblock, peers=$peers, $syncSpeed"; 
 fi
 
 if [ $bestblock -eq 0 ]
   then 
     status="warning"
-    note="cannot fetch network height"
+    message="cannot fetch network height"
 fi
 
 if [ -z $fpid ]
   then 
     status="warning"
-    note="farmer not running, sync $currentblock/$bestblock, peers $peers, $syncSpeed"
+    message="farmer not running, sync $currentblock/$bestblock, peers $peers, $syncSpeed"
 fi
 
 if [ -z $npid ]
   then 
     status="error"
-    note="node not running"
+    message="node not running"
 fi
 
 #echo "updated:           " $(date +'%y-%m-%d %H:%M')
@@ -124,12 +124,44 @@ fi
 #echo "version:           " $version
 #echo "balance:           " $balance
 #echo "type:              " $type
-#echo "note:              " $note
+#echo "message:              " $message
 
-echo "updated='$(date +'%y-%m-%d %H:%M')'"
 echo "version='$version'"
 echo "status=$status"
-echo "note='$note'"
+echo "message='$message'"
 echo "network='$chain'"
 echo "type='$type'"
 echo "folder=$folder"
+
+cat << EOF
+{
+  "id":"$id",
+  "machine":"$MACHINE",
+  "chain":"$chain",
+  "version":"version",
+  "status":"$status",
+  "message":"$message",
+  "fpid":"$fpid",
+  "npid":"$npid",
+  "peers":"$peers",
+  "syncSpeed":"$syncSpeed", 
+  "plotted":"$plotted",
+  "bestblock":"$bestblock",
+  "currentblock":"$currentblock",
+  "balance":"$balance",
+  "updated":"$(date --utc +%FT%TZ)"
+}
+EOF
+
+# send data to influxdb
+if [ ! -z $INFLUX_HOST ]
+then
+ curl --request POST \
+ "$INFLUX_HOST/api/v2/write?org=$INFLUX_ORG&bucket=$bucket&precision=ns" \
+  --header "Authorization: Token $INFLUX_TOKEN" \
+  --header "Content-Type: text/plain; charset=utf-8" \
+  --header "Accept: application/json" \
+  --data-binary "
+    status,node=$id,machine=$MACHINE status=\"$status\",message=\"$message\",version=\"$version\",url=\"$url\",chain=\"$chain\" $(date +%s%N) 
+    "
+fi
