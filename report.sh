@@ -26,6 +26,7 @@ if [ -z $1 ]
 
 source ~/scripts/subspace/config/env
 source ~/scripts/subspace/config/node$id
+source ~/bash_profile
 
 bucket=node
 nlog=~/logs/subspace_node$id
@@ -78,16 +79,16 @@ fi
 if [ $diffblock -le 5 ]
   then 
     status="ok"
-    message="siz $size, rew $rew1-$rew2-$rew3-$rew4, bal $balance, prs $peers"
+    message="size $size rew $rew1-$rew2-$rew3-$rew4 bal $balance peers $peers"
   else 
     status="warning"
-    message="sync $currentblock/$bestblock, prs $peers, $syncSpeed"; 
+    message="sync $currentblock/$bestblock peers $peers $syncSpeed"; 
 fi
 
 if [ $(echo $plotted | cut -d . -f 1) -lt 99 ]
   then 
     status="warning"
-    message="size $size plotting $plotted, peers $peers"
+    message="size $size plotting $plotted peers $peers"
 fi
 
 if [ $bestblock -eq 0 ]
