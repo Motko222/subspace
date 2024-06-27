@@ -28,13 +28,15 @@ source ~/scripts/subspace/config/env
 source ~/scripts/subspace/config/node$id
 source ~/.bash_profile
 
-bucket=node
+
 nlog=~/logs/subspace_node$id
 flog=~/logs/subspace_farmer$id
 
 fpid=$(ps aux | grep -w $base | grep subspace-farmer-ubuntu | awk '{print $2}')
 npid=$(ps aux | grep -w $base | grep subspace-node-ubuntu | awk '{print $2}')
 #chain=$(cat $nlog | grep "Chain specification" | tail -1 | awk -F 'Subspace ' '{print $2}')
+network=testnet
+group=node
 
 currentblock=$(curl -s -H "Content-Type: application/json" -d '{"id":1, "jsonrpc":"2.0", "method": "system_syncState", "params":[]}' http://localhost:$wsport | jq -r ".result.currentBlock")
 if [ -z $currentblock ]; then currentblock=0; fi
@@ -110,7 +112,7 @@ if [ -z $npid ]
 fi
 
 #echo "updated:           " $(date +'%y-%m-%d %H:%M')
-#echo "network:           " $chain
+#echo "chain:             " $chain
 #echo "status:            " $status
 #echo "last_block_time:   " $bdate
 #echo "last_block_age:    " $(min_conv $bmin)
@@ -158,11 +160,11 @@ EOF
 if [ ! -z $INFLUX_HOST ]
 then
  curl --request POST \
- "$INFLUX_HOST/api/v2/write?org=$INFLUX_ORG&bucket=$bucket&precision=ns" \
+ "$INFLUX_HOST/api/v2/write?org=$INFLUX_ORG&bucket=$INFLUX_BUCKET&precision=ns" \
   --header "Authorization: Token $INFLUX_TOKEN" \
   --header "Content-Type: text/plain; charset=utf-8" \
   --header "Accept: application/json" \
   --data-binary "
-    status,node=$id,machine=$MACHINE status=\"$status\",message=\"$message\",version=\"$version\",url=\"$url\",chain=\"$chain\" $(date +%s%N) 
+    report,id=$id,machine=$MACHINE,grp=$group status=\"$status\",message=\"$message\",version=\"$version\",url=\"$url\",chain=\"$chain\",network=\"$network\" $(date +%s%N) 
     "
 fi
